@@ -67,6 +67,7 @@ public class Food {
                 + ")\n purchased " + formattedDatePurchased;
     }
 
+    // MODIFIES: this
     // EFFECTS: updates expiry status according to current date and then checks if food is expired
     public boolean isExpired() {
         updateExpiryStatus();
