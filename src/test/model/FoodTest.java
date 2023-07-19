@@ -38,6 +38,8 @@ class FoodTest {
         testFood.setExpiryDate("2004/02/26");
         assertEquals(LocalDate.parse("2004/02/26", Food.DATE_FORMAT), testFood.getExpiryDate());
         assertTrue(testFood.isExpired());
+        testFood.setExpiryDate(Food.TODAY.format(Food.DATE_FORMAT));
+        assertTrue(testFood.isExpired());
     }
 
     @Test
