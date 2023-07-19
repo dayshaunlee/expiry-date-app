@@ -12,6 +12,7 @@ public class ExpiryDateApp {
     private model.Calendar calendar;
     private Scanner input;
 
+    // MODIFIES: this
     // EFFECTS: runs the app
     public ExpiryDateApp() {
         runApp();
