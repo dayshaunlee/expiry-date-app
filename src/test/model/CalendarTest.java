@@ -16,13 +16,12 @@ public class CalendarTest {
 
     @BeforeEach
     void runBefore() {
-        calendar = new Calendar("Bob's kitchen");
+        calendar = new Calendar();
     }
 
     @Test
     void testConstructor() {
         assertTrue(calendar.getFoodList().isEmpty());
-        assertEquals("Bob's kitchen", calendar.getName());
     }
 
     @Test
@@ -48,8 +47,9 @@ public class CalendarTest {
     @Test
     void testRemoveFoodOne() {
         List <Food> foods= calendar.getFoodList();
+        assertFalse(calendar.removeFood("A"));
         calendar.addFood(A);
-        calendar.removeFood(A);
+        assertTrue(calendar.removeFood("A"));
         assertTrue(foods.isEmpty());
     }
 
@@ -57,11 +57,22 @@ public class CalendarTest {
     void testRemoveFoodMultiple() {
         List <Food> foods= calendar.getFoodList();
         calendar.addFood(A);
-        calendar.removeFood(B);
+        calendar.addFood(B);
+        calendar.addFood(B);
         calendar.addFood(C);
-        calendar.removeFood(B);
-        assertEquals(2, foods.size());
+        assertTrue(calendar.removeFood("B"));
+        assertEquals(3, foods.size());
+        assertTrue(calendar.removeFood("B"));
         assertFalse(foods.contains(B));
+    }
+
+    @Test
+    void testClearList() {
+        List <Food> foods= calendar.getFoodList();
+        calendar.addFood(A);
+        calendar.addFood(C);
+        calendar.clearList();
+        assertTrue(foods.isEmpty());
     }
 
     @Test
@@ -132,7 +143,7 @@ public class CalendarTest {
 
     @Test
     void testReturnSortedListEmpty() {
-        assertEquals("Bob's kitchen\nExpired foods:\nNo food products listed"
+        assertEquals("Expired foods:\nNo food products listed"
                 + "\nNon-expired foods:\nNo food products listed", calendar.returnSortedList());
     }
 
@@ -141,12 +152,9 @@ public class CalendarTest {
         calendar.addFood(A);
         calendar.addFood(B);
         calendar.addFood(C);
-        String msg = "Bob's kitchen\n" +
-                "Expired foods:\n" +
-                "Bob's kitchen\n\t" +
+        String msg = "Expired foods:\n\t" +
                 A +
-                "\n\nNon-expired foods:\n" +
-                "Bob's kitchen\n\t" +
+                "\n\nNon-expired foods:\n\t" +
                 B + "\n\t" + C + "\n";
         assertEquals(msg, calendar.returnSortedList());
     }
@@ -163,8 +171,4 @@ public class CalendarTest {
         assertEquals(C, foods.get(2));
     }
 
-    @Test
-    void testGetName() {
-        assertEquals("Bob's kitchen", calendar.getName());
-    }
 }

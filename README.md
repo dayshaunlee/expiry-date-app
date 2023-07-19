@@ -12,10 +12,10 @@ For products like fresh vegetables, they may not necessarily have expiry dates b
 - not having to spin around jars to read tiny printed text that may have rubbed off
 
 ## User Stories
-- As a user, I want to be able to add a food product with a name, expiry date, and date purchased to a calendar with a name
+- As a user, I want to be able to add a food product with a name, expiry date, and date purchased to a calendar
 - As a user, I want to be able to remove a product from the calendar
-- As a user, I want to be able to change the tabbed expiry date of a product
-- As a user, I want to be able to check if a product is expired
+- As a user, I want to be able to clear all items from the calendar
+- As a user, I want to be able to check the expiry date of a product
 - As a user, I want to be able to view a listing of food products with details on expiry date, date purchased, and whether it is safe to eat
 - As a user, I want to be able to narrow down the listing to only show products that expire within _x_ days
 - As a user, I want to be able to look up a product by name and learn whether it is safe to eat, and for how long

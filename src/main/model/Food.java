@@ -33,6 +33,7 @@ public class Food {
 
     // MODIFIES: this
     // EFFECTS: sets an expiry date in the format dateFormat and updates expired status
+    //          (Note: this method is for usage in tests only)
     public void setExpiryDate(String expiryDate) {
         this.expiryDate = LocalDate.parse(expiryDate, DATE_FORMAT);
         updateExpiryStatus();
@@ -66,7 +67,9 @@ public class Food {
                 + ")\n purchased " + formattedDatePurchased;
     }
 
+    // EFFECTS: updates expiry status according to current date and then checks if food is expired
     public boolean isExpired() {
+        updateExpiryStatus();
         return expired;
     }
 
