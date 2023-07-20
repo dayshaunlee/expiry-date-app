@@ -202,6 +202,7 @@ public class ExpiryDateApp {
         return null;
     }
 
+    // EFFECTS: printed error message if named food is not found in the list
     private void errorMessage() {
         System.out.println("Could not find named food");
     }
