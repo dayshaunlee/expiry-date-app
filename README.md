@@ -19,3 +19,5 @@ For products like fresh vegetables, they may not necessarily have expiry dates b
 - As a user, I want to be able to view a listing of food products with details on expiry date, date purchased, and whether it is safe to eat
 - As a user, I want to be able to narrow down the listing to only show products that expire within _x_ days
 - As a user, I want to be able to look up a product by name and learn whether it is safe to eat, and for how long
+- As a user, I want to be given the option to save my food calendar when I exit
+- As a user, I want to be given to load my food calendar from an earlier state

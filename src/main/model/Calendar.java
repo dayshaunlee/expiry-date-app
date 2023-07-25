@@ -1,12 +1,16 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents a calendar with a name and a list of food products,
 // preserved in the order added, duplicates allowed
-public class Calendar {
-    private List<Food> foodList;
+public class Calendar implements Writable {
+    private final List<Food> foodList;
 
     // EFFECTS: creates a calendar object with an empty list of food products
     public Calendar() {
@@ -93,6 +97,24 @@ public class Calendar {
             output.append("\t").append(f).append("\n");
         }
         return output.toString();
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("foods", foodsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this calendar as a JSON array
+    private JSONArray foodsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Food f : foodList) {
+            jsonArray.put(f.toJson());
+        }
+
+        return jsonArray;
     }
 
 }

@@ -1,16 +1,25 @@
 package ui;
 
 import model.Food;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 // Some methods (marked with "*Adapted") are adapted from the TellerApp class in the CPSC 210 TellerApp repository
-// from https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java
+//      from https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java
+// Additionally, the methods used to read/write data to/from JSON files are adapted
+//      from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/main/ui/WorkRoomApp.java
 
 // Application to track expiry dates
 public class ExpiryDateApp {
+    private static final String JSON_STORE = "./data/food.json";
     private model.Calendar calendar;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // MODIFIES: this
     // EFFECTS: runs the app
@@ -32,7 +41,12 @@ public class ExpiryDateApp {
             command = input.next().toLowerCase();
 
             if (command.equals("e")) {
-                keepGoing = false;
+                System.out.println("Are you sure you want to exit?"
+                        + "Unsaved data will be lost (press \"y\" to continue).");
+                String confirmation = input.next();
+                if (confirmation.equals("y")) {
+                    keepGoing = false;
+                }
             } else {
                 processCommand(command);
             }
@@ -59,8 +73,14 @@ public class ExpiryDateApp {
             case "x":
                 doClear();
                 break;
-            case "s":
+            case "f":
                 doSearchExpired();
+                break;
+            case "s":
+                saveCalendar();
+                break;
+            case "l":
+                loadCalendar();
                 break;
             default:
                 System.out.println("Invalid selection.");
@@ -177,6 +197,8 @@ public class ExpiryDateApp {
         calendar = new model.Calendar();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
     }
 
     // EFFECTS: displays menu of selection options
@@ -186,8 +208,10 @@ public class ExpiryDateApp {
         System.out.println("\tr -> remove food");
         System.out.println("\tc -> check expiry date of food");
         System.out.println("\tv -> view listing of food products");
-        System.out.println("\ts -> search for food and check if expired");
+        System.out.println("\tf -> search for food and check if expired");
         System.out.println("\tx -> clears all food products in list");
+        System.out.println("\ts -> save calendar data to file");
+        System.out.println("\tl -> loads calendar data from file");
         System.out.println("\te -> exit");
     }
 
@@ -205,5 +229,28 @@ public class ExpiryDateApp {
     // EFFECTS: printed error message if named food is not found in the list
     private void errorMessage() {
         System.out.println("Could not find named food");
+    }
+
+    // EFFECTS: saves the calendar to file
+    private void saveCalendar() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(calendar);
+            jsonWriter.close();
+            System.out.println("Saved calendar to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads calendar from file
+    private void loadCalendar() {
+        try {
+            calendar = jsonReader.read();
+            System.out.println("Loaded calendar from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 }

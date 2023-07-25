@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -8,10 +11,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 // Represents a food object with a name, expiry date, and date purchased
 // Date format is parsed according to the format of DATE_FORMAT
-public class Food {
-    private String name;              // name of food
+public class Food implements Writable {
+    private final String name;              // name of food
     private LocalDate expiryDate;     // date food expires
-    private LocalDate datePurchased;  // date food purchased
+    private final LocalDate datePurchased;  // date food purchased
     private boolean expired;          // expiry status, true if food expired
                                       // a food is expired on the day of the expiry date
 
@@ -84,6 +87,16 @@ public class Food {
 
     public LocalDate getDatePurchased() {
         return datePurchased;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("expiry date", expiryDate.format(DATE_FORMAT));
+        json.put("date purchased", datePurchased.format(DATE_FORMAT));
+        json.put("expired", expired);
+        return json;
     }
 
 }
