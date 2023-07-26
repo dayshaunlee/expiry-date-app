@@ -46,16 +46,14 @@ public class ExpiryDateApp {
                     System.out.println("You have unsaved changes. Are you sure you want to exit? "
                             + "[(y)es/(n)o/(s)ave and exit]");
                     String confirmation = input.next();
-                    if (confirmation.equals("y")) {
-                        keepGoing = false;
+                    if (!(confirmation.equals("y") || confirmation.equals("s"))) {
+                        continue;
                     }
                     if (confirmation.equals("s")) {
                         saveCalendar();
-                        keepGoing = false;
                     }
-                } else {
-                    keepGoing = false;
                 }
+                keepGoing = false;
             } else {
                 processCommand(command);
             }
