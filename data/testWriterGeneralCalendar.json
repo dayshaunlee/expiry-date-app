@@ -1,0 +1,14 @@
+{"foods": [
+    {
+        "expired": true,
+        "expiry_date": "2023/07/01",
+        "name": "milk",
+        "date_purchased": "2023/06/25"
+    },
+    {
+        "expired": false,
+        "expiry_date": "2050/08/02",
+        "name": "bread",
+        "date_purchased": "2050/08/01"
+    }
+]}
