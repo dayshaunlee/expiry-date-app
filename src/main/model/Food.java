@@ -93,8 +93,8 @@ public class Food implements Writable {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", name);
-        json.put("expiry date", expiryDate.format(DATE_FORMAT));
-        json.put("date purchased", datePurchased.format(DATE_FORMAT));
+        json.put("expiry_date", expiryDate.format(DATE_FORMAT));
+        json.put("date_purchased", datePurchased.format(DATE_FORMAT));
         json.put("expired", expired);
         return json;
     }

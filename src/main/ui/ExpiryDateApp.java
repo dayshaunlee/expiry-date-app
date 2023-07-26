@@ -20,6 +20,7 @@ public class ExpiryDateApp {
     private Scanner input;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+    private boolean isSaved;
 
     // MODIFIES: this
     // EFFECTS: runs the app
@@ -41,10 +42,18 @@ public class ExpiryDateApp {
             command = input.next().toLowerCase();
 
             if (command.equals("e")) {
-                System.out.println("Are you sure you want to exit?"
-                        + "Unsaved data will be lost (press \"y\" to continue).");
-                String confirmation = input.next();
-                if (confirmation.equals("y")) {
+                if (!isSaved) {
+                    System.out.println("You have unsaved changes. Are you sure you want to exit? "
+                            + "[(y)es/(n)o/(s)ave and exit]");
+                    String confirmation = input.next();
+                    if (confirmation.equals("y")) {
+                        keepGoing = false;
+                    }
+                    if (confirmation.equals("s")) {
+                        saveCalendar();
+                        keepGoing = false;
+                    }
+                } else {
                     keepGoing = false;
                 }
             } else {
@@ -56,6 +65,7 @@ public class ExpiryDateApp {
     // *Adapted
     // MODIFIES: this
     // EFFECTS: processes user command
+    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     private void processCommand(String command) {
         switch (command) {
             case "a":
@@ -109,6 +119,7 @@ public class ExpiryDateApp {
         String confirmation = input.next();
         if (confirmation.equals("y")) {
             System.out.println("Emptied list");
+            isSaved = false;
             calendar.clearList();
         } else {
             System.out.println("No changes made");
@@ -167,6 +178,7 @@ public class ExpiryDateApp {
         String name = input.next();
         if (calendar.removeFood(name)) {
             System.out.println("Successfully removed " + name);
+            isSaved = false;
         } else {
             errorMessage();
         }
@@ -188,6 +200,7 @@ public class ExpiryDateApp {
         } else {
             calendar.addFood(food);
             System.out.println("Successfully added");
+            isSaved = false;
         }
     }
 
@@ -199,6 +212,7 @@ public class ExpiryDateApp {
         input.useDelimiter("\n");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
+        isSaved = true;
     }
 
     // EFFECTS: displays menu of selection options
@@ -238,6 +252,7 @@ public class ExpiryDateApp {
             jsonWriter.write(calendar);
             jsonWriter.close();
             System.out.println("Saved calendar to " + JSON_STORE);
+            isSaved = true;
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_STORE);
         }

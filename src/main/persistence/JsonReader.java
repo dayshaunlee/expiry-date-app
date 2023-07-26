@@ -6,13 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import model.Calendar;
 import model.Food;
 import org.json.*;
 
 // This class is modeled after JSONReader in the JsonSerializationDemo provided by
 // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/src/main/persistence/JsonReader.java
 
-// Represents a reader that reads workroom from JSON data stored in file
+// Represents a reader that reads calendar from JSON data stored in file
 public class JsonReader {
     private final String source;
 
@@ -23,7 +24,7 @@ public class JsonReader {
 
     // EFFECTS: reads workroom from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public model.Calendar read() throws IOException {
+    public Calendar read() throws IOException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseCalendar(jsonObject);
@@ -61,8 +62,8 @@ public class JsonReader {
     // EFFECTS: parses foods from JSON object and adds it to calendar
     private void addFood(model.Calendar c, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
-        String expiryDate = jsonObject.getString("expiry date");
-        String datePurchased = jsonObject.getString("date purchased");
+        String expiryDate = jsonObject.getString("expiry_date");
+        String datePurchased = jsonObject.getString("date_purchased");
 
         Food food = new Food(name, expiryDate, datePurchased);
         c.addFood(food);
