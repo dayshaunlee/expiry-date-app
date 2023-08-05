@@ -22,7 +22,7 @@ public class JsonReader {
         this.source = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads calendar from file and returns it;
     // throws IOException if an error occurs reading data from file
     public Calendar read() throws IOException {
         String jsonData = readFile(source);
@@ -58,7 +58,7 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: wr
+    // MODIFIES: c
     // EFFECTS: parses foods from JSON object and adds it to calendar
     private void addFood(model.Calendar c, JSONObject jsonObject) {
         String name = jsonObject.getString("name");

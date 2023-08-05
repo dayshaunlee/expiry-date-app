@@ -89,6 +89,7 @@ public class Food implements Writable {
         return datePurchased;
     }
 
+    // EFFECTS: Returns food object formatted as a string, with details
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
