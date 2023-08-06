@@ -46,8 +46,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+// Represents a GUI of an expiry date app, referenced from ListDemo and TextInputDemo
+// from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
 /* ListDemo.java requires no other files. */
-public class ListDemo extends JPanel
+public class FoodList extends JPanel
         implements ListSelectionListener, ActionListener,
         FocusListener {
     private final JList list;
@@ -64,7 +66,9 @@ public class ListDemo extends JPanel
 
     private final Calendar calendar;
 
-    public ListDemo(Calendar calendar) {
+    // MODIFIES: this
+    // EFFECTS: creates GUI of food list
+    public FoodList(Calendar calendar) {
         super(new BorderLayout());
         this.calendar = calendar;
 
@@ -97,12 +101,16 @@ public class ListDemo extends JPanel
         add(listScrollPane, BorderLayout.WEST);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds foods to list
     private void addFoodsToList() {
         for (Food f : calendar.getFoodList()) {
             listModel.addElement(f);
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates buttons
     protected JComponent createButtons() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 
@@ -129,22 +137,13 @@ public class ListDemo extends JPanel
         return panel;
     }
 
-    /**
-     * Called when the user clicks the button or presses
-     * Enter in a text field.
-     */
+    // MODIFIES: this
+    // EFFECTS: placeholder to override method required by ActionEvent
     public void actionPerformed(ActionEvent e) {
-        if ("clear".equals(e.getActionCommand())) {
-            foodNameField.setText("");
-
-            //We can't just setText on the formatted text
-            //field, since its value will remain set.
-            foodExpiryDateField.setValue(null);
-        }
+        // doesn't get called
     }
 
-
-    //A convenience method for creating a MaskFormatter.
+    //EFFECTS: A convenience method for creating a MaskFormatter.
     protected MaskFormatter createFormatter(String s) {
         MaskFormatter formatter = null;
         try {
@@ -156,10 +155,7 @@ public class ListDemo extends JPanel
         return formatter;
     }
 
-    /**
-     * Called when one of the fields gets the focus so that
-     * we can select the focused field.
-     */
+    // EFFECTS: Called when one of the fields gets the focus so that we can select the focused field.
     public void focusGained(FocusEvent e) {
         Component c = e.getComponent();
         if (c instanceof JFormattedTextField) {
@@ -169,7 +165,7 @@ public class ListDemo extends JPanel
         }
     }
 
-    //Workaround for formatted text field focus side effects.
+    //EFFECTS: Workaround for formatted text field focus side effects.
     protected void selectItLater(Component c) {
         if (c instanceof JFormattedTextField) {
             final JFormattedTextField ftf = (JFormattedTextField) c;
@@ -181,10 +177,11 @@ public class ListDemo extends JPanel
         }
     }
 
-    //Needed for FocusListener interface.
+    // EFFECTS: Needed for FocusListener interface.
     public void focusLost(FocusEvent e) {
     } //ignore
 
+    // EFFECTS: returns new panel with entry fields
     protected JComponent createEntryFields() {
         JPanel panel = new JPanel(new SpringLayout());
 
@@ -208,9 +205,9 @@ public class ListDemo extends JPanel
         return panel;
     }
 
+    // EFFECTS: Associate label/field pairs, add everything,
+    //          and lay it out.
     private void setupLabelFields(JPanel panel, String[] labelStrings, JLabel[] labels, JComponent[] fields) {
-        //Associate label/field pairs, add everything,
-        //and lay it out.
         for (int i = 0; i < labelStrings.length; i++) {
             labels[i] = new JLabel(labelStrings[i],
                     JLabel.TRAILING);
@@ -222,18 +219,16 @@ public class ListDemo extends JPanel
         }
     }
 
+    // EFFECTS: Add listeners to each field.
     private void addFieldListener(JComponent[] fields, int i) {
-        //Add listeners to each field.
         JTextField tf = null;
-        if (fields[i] instanceof JSpinner) {
-            tf = getTextField((JSpinner) fields[i]);
-        } else {
-            tf = (JTextField) fields[i];
-        }
+        tf = (JTextField) fields[i];
         tf.addActionListener(this);
         tf.addFocusListener(this);
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates text fields
     private void createTextFields(JComponent[] fields, int fieldNum) {
         //Create the text field and set it up.
         foodNameField = new JTextField();
@@ -249,19 +244,12 @@ public class ListDemo extends JPanel
         fields[fieldNum++] = foodDatePurchasedField;
     }
 
-    public JFormattedTextField getTextField(JSpinner spinner) {
-        JComponent editor = spinner.getEditor();
-        if (editor instanceof JSpinner.DefaultEditor) {
-            return ((JSpinner.DefaultEditor) editor).getTextField();
-        } else {
-            System.err.println("Unexpected editor type: "
-                    + spinner.getEditor().getClass()
-                    + " isn't a descendant of DefaultEditor");
-            return null;
-        }
-    }
-
+    // handles when an item is removed
     class RemoveListener implements ActionListener {
+
+        // MODIFIES: this
+        // EFFECTS: removes item when remove button pressed
+        @Override
         public void actionPerformed(ActionEvent e) {
             //This method can be called only if
             //there's a valid selection
@@ -293,11 +281,14 @@ public class ListDemo extends JPanel
         private boolean alreadyEnabled = false;
         private final JButton button;
 
+        // MODIFIES: this
+        // EFFECTS: adds listener
         public AddListener(JButton button) {
             this.button = button;
         }
 
         //Required by ActionListener.
+        // EFFECTS: adds item when add button is pressed
         public void actionPerformed(ActionEvent e) {
             String name = foodNameField.getText();
             String expiryDate = foodExpiryDateField.getText();
@@ -337,33 +328,45 @@ public class ListDemo extends JPanel
         //This method tests for string equality. You could certainly
         //get more sophisticated about the algorithm.  For example,
         //you might want to ignore white space and capitalization.
+
+        //EFFECTS: checks if item is already in list
         protected boolean alreadyInList(String name) {
             return listModel.contains(name);
         }
 
         //Required by DocumentListener.
+        // MODIFIES: this
+        // EFFECTS: enables button when text box not empty
         public void insertUpdate(DocumentEvent e) {
             enableButton();
         }
 
         //Required by DocumentListener.
+        // MODIFIES: this
+        // EFFECTS: disables button when text box empty
         public void removeUpdate(DocumentEvent e) {
             handleEmptyTextField(e);
         }
 
         //Required by DocumentListener.
+        // MODIFIES: this
+        // EFFECTS: enables button when text box changed and isn't empty
         public void changedUpdate(DocumentEvent e) {
             if (!handleEmptyTextField(e)) {
                 enableButton();
             }
         }
 
+        // MODIFIES: this
+        // EFFECTS: enables button
         private void enableButton() {
             if (!alreadyEnabled) {
                 button.setEnabled(true);
             }
         }
 
+        // MODIFIES: this
+        // EFFECTS: disables button when text field is empty
         private boolean handleEmptyTextField(DocumentEvent e) {
             if (e.getDocument().getLength() <= 0) {
                 button.setEnabled(false);
@@ -375,6 +378,8 @@ public class ListDemo extends JPanel
     }
 
     //This method is required by ListSelectionListener.
+    // MODIFIES: this
+    // EFFECTS: deals with disabling and enabling of remove button
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
 
