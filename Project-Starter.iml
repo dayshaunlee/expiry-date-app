@@ -28,5 +28,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="JSON" level="project" />
+    <orderEntry type="library" name="FlatLaf" level="project" />
+    <orderEntry type="library" name="FlatLaf Themes" level="project" />
   </component>
 </module>

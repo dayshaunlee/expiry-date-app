@@ -45,6 +45,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.List;
 
 // Represents a GUI of an expiry date app, referenced from ListDemo and TextInputDemo
 // from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
@@ -58,6 +59,7 @@ public class FoodList extends JPanel
     private static final int GAP = 10;
     private static final String addString = "Add";
     private static final String removeString = "Remove";
+    private static final String filterString = "Filter";
     private JButton removeButton;
 
     JTextField foodNameField;
@@ -65,23 +67,23 @@ public class FoodList extends JPanel
     JFormattedTextField foodDatePurchasedField;
 
     private final Calendar calendar;
+    private final JFrame frame;
+    private final CalendarDisplay calDisplay;
 
     // MODIFIES: this
     // EFFECTS: creates GUI of food list
-    public FoodList(Calendar calendar) {
+    public FoodList(Calendar calendar, JFrame frame, CalendarDisplay calDisplay) {
         super(new BorderLayout());
         this.calendar = calendar;
+        this.frame = frame;
+        this.calDisplay = calDisplay;
 
         listModel = new DefaultListModel();
-        addFoodsToList();
+        addFoodsToList(calendar.getFoodList());
 
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
-        list.setVisibleRowCount(10);
-        JScrollPane listScrollPane = new JScrollPane(list);
+        JScrollPane listScrollPane = initList();
 
         JPanel leftHalf = new JPanel() {
             //Don't allow us to stretch vertically.
@@ -96,21 +98,31 @@ public class FoodList extends JPanel
         leftHalf.add(createEntryFields());
         leftHalf.add(createButtons());
 
-        add(leftHalf);
-
         add(listScrollPane, BorderLayout.WEST);
+        add(leftHalf);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the display list
+    private JScrollPane initList() {
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(0);
+        list.addListSelectionListener(this);
+        list.setVisibleRowCount(10);
+        return new JScrollPane(list);
     }
 
     // MODIFIES: this
     // EFFECTS: adds foods to list
-    private void addFoodsToList() {
-        for (Food f : calendar.getFoodList()) {
+    private void addFoodsToList(List<Food> foods) {
+        for (Food f : foods) {
             listModel.addElement(f);
         }
+        calDisplay.updateCalendar(calendar);
     }
 
     // MODIFIES: this
-    // EFFECTS: creates buttons
+    // EFFECTS: creates buttons and adds them
     protected JComponent createButtons() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 
@@ -118,17 +130,23 @@ public class FoodList extends JPanel
         removeButton.setActionCommand(removeString);
         removeButton.addActionListener(new RemoveListener());
 
+        JButton filterButton = new JButton(filterString);
+        filterButton.setActionCommand(filterString);
+        filterButton.addActionListener(new FilterListener());
+
         JButton addButton = new JButton(addString);
         AddListener addListener = new AddListener(addButton);
+        addButton.setActionCommand(addString);
+        addButton.addActionListener(addListener);
+
         foodNameField.getDocument().addDocumentListener(addListener);
         foodExpiryDateField.getDocument().addDocumentListener(addListener);
         foodDatePurchasedField.getDocument().addDocumentListener(addListener);
 
-        addButton.setActionCommand(addString);
-        addButton.addActionListener(addListener);
         addButton.setEnabled(false);
         panel.add(addButton);
         panel.add(removeButton);
+        panel.add(filterButton);
 
         //Match the SpringLayout's gap, subtracting 5 to make
         //up for the default gap FlowLayout provides.
@@ -138,7 +156,7 @@ public class FoodList extends JPanel
     }
 
     // MODIFIES: this
-    // EFFECTS: placeholder to override method required by ActionEvent
+    // EFFECTS: required by ActionListener
     public void actionPerformed(ActionEvent e) {
         // doesn't get called
     }
@@ -169,11 +187,7 @@ public class FoodList extends JPanel
     protected void selectItLater(Component c) {
         if (c instanceof JFormattedTextField) {
             final JFormattedTextField ftf = (JFormattedTextField) c;
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    ftf.selectAll();
-                }
-            });
+            SwingUtilities.invokeLater(ftf::selectAll);
         }
     }
 
@@ -221,7 +235,7 @@ public class FoodList extends JPanel
 
     // EFFECTS: Add listeners to each field.
     private void addFieldListener(JComponent[] fields, int i) {
-        JTextField tf = null;
+        JTextField tf;
         tf = (JTextField) fields[i];
         tf.addActionListener(this);
         tf.addFocusListener(this);
@@ -258,6 +272,7 @@ public class FoodList extends JPanel
             Food selected = (Food) list.getSelectedValue();
             listModel.remove(index);
             calendar.removeFood(selected.getName());
+            calDisplay.updateCalendar(calendar);
 
             int size = listModel.getSize();
 
@@ -273,6 +288,34 @@ public class FoodList extends JPanel
                 list.setSelectedIndex(index);
                 list.ensureIndexIsVisible(index);
             }
+        }
+    }
+
+    // handles when items are filtered
+    class FilterListener implements ActionListener {
+        // MODIFIES: this
+        // EFFECTS: filters items when filter button pressed
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String s = (String)JOptionPane.showInputDialog(
+                    frame,
+                    "message",
+                    "title",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+
+            //If a string was returned, say so.
+            if ((s != null) && (s.length() > 0) && s.matches("^[0-9]*$")) {
+                listModel.removeAllElements();
+                addFoodsToList(calendar.getFoodListExpiresInDays(Integer.parseInt(s)));
+                return;
+            }
+
+            //If you're here, the return value was null/empty/not a number.
+            listModel.removeAllElements();
+            addFoodsToList(calendar.getFoodList());
         }
     }
 
@@ -310,11 +353,10 @@ public class FoodList extends JPanel
                 index++;
             }
 
-            listModel.insertElementAt(food.toString(), index);
-            //If we just wanted to add to the end, we'd do this:
-            //listModel.addElement(employeeName.getText());
 
+            listModel.addElement(food);
             calendar.addFood(food);
+            calDisplay.updateCalendar(calendar);
 
             //Reset the text field.
             foodNameField.requestFocusInWindow();

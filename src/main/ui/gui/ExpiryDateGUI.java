@@ -1,5 +1,6 @@
 package ui.gui;
 
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterContrastIJTheme;
 import model.Calendar;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -14,7 +15,7 @@ import java.io.IOException;
 // Open/close dialog is referenced from DialogDemo
 // from https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html
 
-// Main window
+// Main window, also handles opening/closing events
 public class ExpiryDateGUI {
     private static final String JSON_STORE = "./data/food.json";
     private static final String CLOSE_MESSAGE = "Do you want to save before exiting?";
@@ -51,7 +52,6 @@ public class ExpiryDateGUI {
 
     // MODIFIES: this
     // EFFECTS: creates dialog popup boxes when opening/closing the app
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     private static void openClose(JFrame frame, Boolean onClose) {
         String message;
         String title;
@@ -64,6 +64,35 @@ public class ExpiryDateGUI {
             title = OPEN_TITLE;
         }
 
+        final JOptionPane optionPane = setupDialogBox(frame, message, title);
+
+        int value = (Integer) optionPane.getValue();
+        if (value == JOptionPane.YES_OPTION) {
+            handleYesOption(onClose);
+
+        } else if (value == JOptionPane.NO_OPTION) {
+            handleNoOption(onClose);
+        }
+    }
+
+    // EFFECTS: handles action whgen user selects no option
+    private static void handleNoOption(Boolean onClose) {
+        if (onClose) {
+            System.exit(0);
+        }
+    }
+
+    // EFFECTS: handles action when user selects yes option
+    private static void handleYesOption(Boolean onClose) {
+        if (onClose) {
+            saveCalendar();
+            System.exit(0);
+        }
+        loadCalendar();
+    }
+
+    // EFFECTS: creates and displays dialog box, and handles related events
+    private static JOptionPane setupDialogBox(JFrame frame, String message, String title) {
         final JOptionPane optionPane = new JOptionPane(
                 message,
                 JOptionPane.QUESTION_MESSAGE,
@@ -76,14 +105,16 @@ public class ExpiryDateGUI {
         final JDialog dialog = new JDialog(frame,
                 title,
                 true);
-        dialog.setContentPane(optionPane);
-        dialog.setDefaultCloseOperation(
-                JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent we) {
-                Toolkit.getDefaultToolkit().beep();
-            }
-        });
+        makeWindowUnclosable(optionPane, dialog);
+        handleCloseWindow(optionPane, dialog);
+        dialog.pack();
+        dialog.setLocationRelativeTo(frame);
+        dialog.setVisible(true);
+        return optionPane;
+    }
+
+    // EFFECTS: closes window after action has been selected
+    private static void handleCloseWindow(JOptionPane optionPane, JDialog dialog) {
         optionPane.addPropertyChangeListener(
                 e -> {
                     String prop = e.getPropertyName();
@@ -97,27 +128,18 @@ public class ExpiryDateGUI {
                         dialog.setVisible(false);
                     }
                 });
-        dialog.pack();
-        dialog.setLocationRelativeTo(frame);
-        dialog.setVisible(true);
+    }
 
-        int value = (Integer) optionPane.getValue();
-        if (value == JOptionPane.YES_OPTION) {
-            if (onClose) {
-                saveCalendar();
-                System.exit(0);
+    // EFFECTS: prevents the user from closing the dialog window with the X button
+    private static void makeWindowUnclosable(JOptionPane optionPane, JDialog dialog) {
+        dialog.setContentPane(optionPane);
+        dialog.setDefaultCloseOperation(
+                JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                Toolkit.getDefaultToolkit().beep();
             }
-            loadCalendar();
-
-        } else if (value == JOptionPane.NO_OPTION) {
-            if (onClose) {
-                System.exit(0);
-            }
-        }
-
-        //non-auto-closing dialog with custom message area
-        //NOTE: if you don't intend to check the input,
-        //then just use showInputDialog instead.
+        });
     }
 
     // EFFECTS: Create the GUI and show it.  For thread safety,
@@ -125,7 +147,7 @@ public class ExpiryDateGUI {
     //          event-dispatching thread.
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("ListDemo");
+        JFrame frame = new JFrame("Expiry Date Tracker");
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
@@ -136,9 +158,13 @@ public class ExpiryDateGUI {
         openClose(frame, false);
 
         //Create and set up the content pane.
-        JComponent newContentPane = new FoodList(calendar);
-        newContentPane.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(newContentPane);
+        Container c = frame.getContentPane();
+        CalendarDisplay calendarDisplay = new CalendarDisplay(calendar);
+        c.setLayout(new BoxLayout(c, BoxLayout.X_AXIS));
+
+        //Add elements
+        c.add(calendarDisplay);
+        c.add(new FoodList(calendar, frame, calendarDisplay));
 
         //Display the window.
         frame.pack();
@@ -149,6 +175,9 @@ public class ExpiryDateGUI {
     // MODIFIES: this
     // EFFECTS: runs the app
     public static void main(String[] args) {
+        //setup L&F
+        FlatMaterialLighterContrastIJTheme.setup();
+
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(() -> {
