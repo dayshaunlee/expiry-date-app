@@ -299,8 +299,8 @@ public class FoodList extends JPanel
         public void actionPerformed(ActionEvent e) {
             String s = (String)JOptionPane.showInputDialog(
                     frame,
-                    "message",
-                    "title",
+                    "Enter a number to view foods expiring within that amount of days (or leave blank to view all)",
+                    "Filter by days",
                     JOptionPane.PLAIN_MESSAGE,
                     null,
                     null,

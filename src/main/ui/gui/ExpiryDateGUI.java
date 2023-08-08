@@ -175,8 +175,8 @@ public class ExpiryDateGUI {
     // MODIFIES: this
     // EFFECTS: runs the app
     public static void main(String[] args) {
-        //setup L&F
-        FlatMaterialLighterContrastIJTheme.setup();
+        //setup L&F, for some reason Git doesn't recognize the library
+//        FlatMaterialLighterContrastIJTheme.setup();
 
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
