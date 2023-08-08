@@ -75,7 +75,7 @@ public class ExpiryDateGUI {
         }
     }
 
-    // EFFECTS: handles action whgen user selects no option
+    // EFFECTS: handles action when user selects no option
     private static void handleNoOption(Boolean onClose) {
         if (onClose) {
             System.exit(0);

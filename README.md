@@ -19,6 +19,14 @@ For products like fresh vegetables, they may not necessarily have expiry dates b
 - As a user, I want to be able to view a listing of food products with details on expiry date, date purchased, and whether it is safe to eat
 - As a user, I want to be able to narrow down the listing to only show products that expire within _x_ days
 - As a user, I want to be able to look up a product by name and learn whether it is safe to eat, and for how long
-- As a user, I want to be given the option to save my food calendar when I exit, if there are unsaved changes
+- As a user, I want to be given the option to save my food calendar when I exit
 - As a user, I want to be give the option to save my data at any point
-- As a user, I want to be given to load my food calendar from an earlier state
+- As a user, I want to be given the option to load my food calendar from an earlier state
+
+## Instructions For Grader
+- To add a Food to a Calender, enter the name, expiry date, and date purchased in the fields, and press the "Add" button
+- To remove a Food from a Calender, click a Food from the list, and press the "Remove" button
+- To filter the foods to only show those expiring in X days, click the "Filter" button and enter an integer number of days and press "Ok"
+- The visual component of the project is always displayed on the left side of the main window and is a calendar showing expiring dates in the current month, past the current date
+- To save the state of the application, click the X in the top to exit the main window, and select "Yes" when prompted
+- To load the state of the application from a file, select "Yes" when prompted upon running the application

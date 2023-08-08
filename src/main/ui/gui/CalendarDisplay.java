@@ -19,15 +19,15 @@ public class CalendarDisplay extends JPanel {
     private static final int ROWS = 5; // amount of weeks in a month
     private static final int COLS = 7; // amount of days in a week
 
-    private static final int WIDTH = 400;
-    private static final int HEIGHT = 300;
+    private static final int WIDTH = 400; // width of calendar
+    private static final int HEIGHT = 300; // height of calendar
 
-    private static final Color NORMAL_COLOR = new Color(230, 230, 230);
+    private static final Color NORMAL_COLOR = new Color(230, 230, 230); // color of panel that has a date
 
-    private static final Color TODAY_COLOR = new Color(92, 231, 255);
-    private static final LocalDate NOW = LocalDate.now();
+    private static final Color TODAY_COLOR = new Color(92, 231, 255); // color of panel that is current day
+    private static final LocalDate NOW = LocalDate.now(); // current dateTime upon running application
 
-    private final int offset;
+    private final int offset; // how many panels to offset the first day of the month
     // days in the month that have food that expires on that day AND is after today
     private final List<Integer> expiresSoon = new ArrayList<>();
 
@@ -64,6 +64,8 @@ public class CalendarDisplay extends JPanel {
         for (int p = offset; p < NOW.lengthOfMonth() + offset; p++) {
             int currentDay = p - offset + 1;
             int todayDay = NOW.getDayOfMonth();
+
+            // Approximately 30 days in a month, MAX hue of 75/360
             float expiresHowSoonScale = (currentDay - todayDay) / 30F * (75F / 360);
             JPanel currentPanel = (JPanel) getComponent(p);
             currentPanel.removeAll();
@@ -93,7 +95,7 @@ public class CalendarDisplay extends JPanel {
     }
 
     // EFFECTS: always returns a Dimension of set size,
-    //          effectively sets size of CalendarDisplay
+    //          effectively sets size of CalendarDisplay to WIDTH AND HEIGHT
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(WIDTH, HEIGHT);
