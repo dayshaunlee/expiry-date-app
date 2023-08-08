@@ -53,8 +53,8 @@ import java.util.List;
 public class FoodList extends JPanel
         implements ListSelectionListener, ActionListener,
         FocusListener {
-    private final JList list;
-    private final DefaultListModel listModel;
+    private final JList<Food> list;
+    private final DefaultListModel<Food> listModel;
 
     private static final int GAP = 10;
     private static final String addString = "Add";
@@ -78,11 +78,11 @@ public class FoodList extends JPanel
         this.frame = frame;
         this.calDisplay = calDisplay;
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         addFoodsToList(calendar.getFoodList());
 
         //Create the list and put it in a scroll pane.
-        list = new JList(listModel);
+        list = new JList<>(listModel);
         JScrollPane listScrollPane = initList();
 
         JPanel leftHalf = new JPanel() {
@@ -269,7 +269,7 @@ public class FoodList extends JPanel
             //there's a valid selection
             //so go ahead and remove whatever's selected.
             int index = list.getSelectedIndex();
-            Food selected = (Food) list.getSelectedValue();
+            Food selected = list.getSelectedValue();
             listModel.remove(index);
             calendar.removeFood(selected.getName());
             calDisplay.updateCalendar(calendar);
