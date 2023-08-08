@@ -37,8 +37,14 @@
     },
     {
         "expired": false,
-        "expiry_date": "2023/08/23",
-        "name": "cookies",
-        "date_purchased": "2023/07/20"
+        "expiry_date": "2023/08/15",
+        "name": "test",
+        "date_purchased": "2023/08/06"
+    },
+    {
+        "expired": false,
+        "expiry_date": "2023/08/31",
+        "name": "test2",
+        "date_purchased": "2023/08/06"
     }
 ]}

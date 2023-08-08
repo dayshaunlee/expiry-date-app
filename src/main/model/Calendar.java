@@ -21,6 +21,7 @@ public class Calendar implements Writable {
     // EFFECTS: adds a food product to the list
     public void addFood(Food food) {
         foodList.add(food);
+        EventLog.getInstance().logEvent(new Event("Added food to calendar"));
     }
 
     // MODIFIES: this
@@ -30,6 +31,7 @@ public class Calendar implements Writable {
         for (Food f: foodList) {
             if (f.getName().equals(foodName)) {
                 foodList.remove(f);
+                EventLog.getInstance().logEvent(new Event("Removed food from calendar"));
                 return true;
             }
         }
@@ -52,6 +54,7 @@ public class Calendar implements Writable {
                 expiredFoods.add(f);
             }
         }
+        EventLog.getInstance().logEvent(new Event("Displayed filtered list of foods"));
         return expiredFoods;
     }
 

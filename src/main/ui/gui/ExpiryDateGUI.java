@@ -1,7 +1,9 @@
 package ui.gui;
 
-//import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterContrastIJTheme;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterContrastIJTheme;
 import model.Calendar;
+import model.Event;
+import model.EventLog;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -75,9 +77,18 @@ public class ExpiryDateGUI {
         }
     }
 
+    // EFFECTS: prints logged events to console
+    private static void displayLog() {
+        for (Event e : EventLog.getInstance()) {
+            System.out.println(e);
+            System.out.println("");
+        }
+    }
+
     // EFFECTS: handles action when user selects no option
     private static void handleNoOption(Boolean onClose) {
         if (onClose) {
+            displayLog();
             System.exit(0);
         }
     }
@@ -86,6 +97,7 @@ public class ExpiryDateGUI {
     private static void handleYesOption(Boolean onClose) {
         if (onClose) {
             saveCalendar();
+            displayLog();
             System.exit(0);
         }
         loadCalendar();
@@ -176,7 +188,7 @@ public class ExpiryDateGUI {
     // EFFECTS: runs the app
     public static void main(String[] args) {
         //setup L&F, for some reason Git doesn't recognize the library
-//        FlatMaterialLighterContrastIJTheme.setup();
+        FlatMaterialLighterContrastIJTheme.setup();
 
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
