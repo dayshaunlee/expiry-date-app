@@ -81,7 +81,7 @@ public class ExpiryDateGUI {
     private static void displayLog() {
         for (Event e : EventLog.getInstance()) {
             System.out.println(e);
-            System.out.println("");
+            System.out.println();
         }
     }
 

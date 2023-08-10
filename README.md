@@ -70,3 +70,8 @@ Displayed filtered list of foods
 
 Wed Aug 09 18:53:13 PDT 2023
 Added food to calendar
+
+### Phase 4: Task 3
+Reflecting on the UML design diagram of my project, I could clearly make my project more cohesive by removing the association from FoodList to Food, since FoodList can reach Food through Calendar anyway. With my current design, there is unnecessary coupling. The list being displayed is a separate list from the JSON data, which could cause problems if the data being saved to the file is different from what the user sees on their screen.
+
+Additionally, it is noticeable that there are many associations to Calendar, but in the project itself they are actually all the same Calendar object. This is because only one Calendar object is ever instantiated, and it is simply passed around as a parameter through many systems. A problem could arise if another Calendar is instantiated somewhere else which corrupts the save data, so this would be a good usage case for a Calendar singleton. That way, I can be sure that there is only ever one Calendar through the whole system.
