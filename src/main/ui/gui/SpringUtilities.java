@@ -84,7 +84,7 @@ public class SpringUtilities {
         }
     }
 
-    /* Used by makeCompactGrid. */
+    //EFFECTS: Used by makeCompactGrid to get cell constraints
     private static SpringLayout.Constraints getConstraintsForCell(
             int row, int col,
             Container parent,
@@ -142,8 +142,8 @@ public class SpringUtilities {
         return y;
     }
 
+    // EFFECTS: set the parent's size
     private static void setParentSize(Container parent, SpringLayout layout, Spring x, Spring y) {
-        //Set the parent's size.
         SpringLayout.Constraints pcons = layout.getConstraints(parent);
         pcons.setConstraint(SpringLayout.SOUTH, y);
         pcons.setConstraint(SpringLayout.EAST, x);

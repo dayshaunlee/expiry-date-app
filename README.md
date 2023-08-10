@@ -30,3 +30,43 @@ For products like fresh vegetables, they may not necessarily have expiry dates b
 - The visual component of the project is always displayed on the left side of the main window and is a calendar showing expiring dates in the current month, past the current date
 - To save the state of the application, click the X in the top to exit the main window, and select "Yes" when prompted
 - To load the state of the application from a file, select "Yes" when prompted upon running the application
+
+### Phase 4: Task 2
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:48 PDT 2023
+Added food to calendar
+
+Wed Aug 09 18:52:54 PDT 2023
+Removed food from calendar
+
+Wed Aug 09 18:52:54 PDT 2023
+Removed food from calendar
+
+Wed Aug 09 18:52:54 PDT 2023
+Removed food from calendar
+
+Wed Aug 09 18:52:55 PDT 2023
+Removed food from calendar
+
+Wed Aug 09 18:53:01 PDT 2023
+Displayed filtered list of foods
+
+Wed Aug 09 18:53:13 PDT 2023
+Added food to calendar
