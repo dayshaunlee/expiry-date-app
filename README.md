@@ -23,7 +23,7 @@ For products like fresh vegetables, they may not necessarily have expiry dates b
 - As a user, I want to be give the option to save my data at any point
 - As a user, I want to be given the option to load my food calendar from an earlier state
 
-## Instructions For Grader
+## Instructions
 - To add a Food to a Calender, enter the name, expiry date, and date purchased in the fields, and press the "Add" button
 - To remove a Food from a Calender, click a Food from the list, and press the "Remove" button
 - To filter the foods to only show those expiring in X days, click the "Filter" button and enter an integer number of days and press "Ok"
@@ -31,7 +31,7 @@ For products like fresh vegetables, they may not necessarily have expiry dates b
 - To save the state of the application, click the X in the top to exit the main window, and select "Yes" when prompted
 - To load the state of the application from a file, select "Yes" when prompted upon running the application
 
-### Phase 4: Task 2
+### Example of Log
 Wed Aug 09 18:52:48 PDT 2023
 Added food to calendar
 
@@ -70,8 +70,3 @@ Displayed filtered list of foods
 
 Wed Aug 09 18:53:13 PDT 2023
 Added food to calendar
-
-### Phase 4: Task 3
-Reflecting on the UML design diagram of my project, I could clearly make my project more cohesive by removing the association from FoodList to Food, since FoodList can reach Food through Calendar anyway. With my current design, there is unnecessary coupling. The list being displayed is a separate list from the JSON data, which could cause problems if the data being saved to the file is different from what the user sees on their screen.
-
-Additionally, it is noticeable that there are many associations to Calendar, but in the project itself they are actually all the same Calendar object. This is because only one Calendar object is ever instantiated, and it is simply passed around as a parameter through many systems. A problem could arise if another Calendar is instantiated somewhere else which corrupts the save data, so this would be a good usage case for a Calendar singleton. That way, I can be sure that there is only ever one Calendar through the whole system.
